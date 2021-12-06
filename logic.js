@@ -1,11 +1,19 @@
 class Slider {
 
-    constructor(id, x, y) {
+    constructor(id, x, y, name, min, max, value) {
         this.id = id;
         this.x = x;
         this.y = y;
+        this.name = name;
+        this.min = min;
+        this.max = max;
+        this.value = value;
     }
 }
+
+let colors = ['red', 'orange', 'blue', 'green', 'cyan', 'salmon'];
+
+let sliders = [];
 
 // To je okno v katerega risem
 var canvas = document.getElementById('myCanvas');
@@ -60,7 +68,19 @@ canvas.addEventListener('mousemove', function (evt) {
     var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y + " | " + amount;
     writeMessage(canvas, message);
 
-    drawSlider(250, 250, 40, amount, 'red');
+    sliders.forEach(slider => {
+        drawSlider(
+            slider.x,
+            slider.y,
+            (slider.id + 1) * 40,
+            (slider.value / slider.max),
+            colors[slider.id]);
+    })
 
 
 }, false);
+
+document.getElementById("btn-add").addEventListener("click", function() {
+    sliders.push(
+        new Slider(sliders.length, 250, 250, 'name', 0, 1000, 657));
+  });
