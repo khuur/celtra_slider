@@ -28,24 +28,39 @@ function getMousePos(canvas, evt) {
     };
 }
 
+function drawSlider(x, y, r, percentage, color) {
+    var ctx = canvas.getContext("2d");
+
+    ctx.lineWidth = 15;
+
+    ctx.strokeStyle = color;
+    ctx.beginPath();
+    // first part of slider (1/4)
+    if (percentage < 0.25) {
+        ctx.arc(x, y, r, 1.5 * Math.PI, +(percentage / 0.25 * (0.5) * Math.PI) + (1.5 * Math.PI));
+    } else {
+        ctx.arc(x, y, r, 1.5 * Math.PI, (2 * Math.PI));
+    }
+    ctx.stroke();
+    // second part of slider (3/4)
+    if (percentage > 0.25) {
+        percentage = percentage - 0.25;
+
+        ctx.strokeStyle = color;
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, (percentage / 0.75) * (1.5 * Math.PI));
+        ctx.stroke();
+    }
+}
+
 // Vsakic ko premaknem misko se tole aktivira
 canvas.addEventListener('mousemove', function (evt) {
     var mousePos = getMousePos(canvas, evt);
-    var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+    let amount = mousePos.y / 500;
+    var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y + " | " + amount;
     writeMessage(canvas, message);
 
-    var ctx = canvas.getContext("2d");
-    ctx.lineWidth = 15;
-
-    ctx.strokeStyle = 'orange';
-    ctx.beginPath();
-    // 3/2 == ura 12
-    // 1.499 == minuta do 12
-    // 0PI == ura 3
-    // 1/2PI == ura 6
-    // PI == ura 9
-    ctx.arc(250, 250, 40, (3 / 2 * Math.PI), (1.499 * Math.PI));
-    ctx.stroke();
+    drawSlider(250, 250, 40, amount, 'red');
 
 
 }, false);
