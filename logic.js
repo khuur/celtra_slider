@@ -80,7 +80,12 @@ canvas.addEventListener('mousemove', function (evt) {
 
 }, false);
 
-document.getElementById("btn-add").addEventListener("click", function() {
+document.getElementById("btn_add").addEventListener("click", function() {
+
+    let minValue = document.getElementById("min_value").value;
+    let maxValue = document.getElementById("max_value").value;
+    let value = document.getElementById("value").value;
+
     sliders.push(
-        new Slider(sliders.length, 250, 250, 'name', 0, 1000, 657));
+        new Slider(sliders.length, 250, 250, 'name', minValue, maxValue, value));
   });

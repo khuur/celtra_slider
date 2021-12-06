@@ -1,26 +1,42 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-    <head>
-		<title> Kristjan Bleiweis Sliders </title>
-		<meta http-equiv="Content-Type" content="text/html; charset = utf-8">
-	</head>
+  <head>
+    <title>Kristjan Bleiweis Sliders</title>
+    <meta http-equiv="Content-Type" content="text/html; charset = utf-8" />
+  </head>
   <header>
     <link rel="stylesheet" href="style.css" />
   </header>
   <body>
-    
+    <div class="main">
+      <div>
+        <canvas
+          id="myCanvas"
+          width="500px"
+          height="500px"
+          style="border: 1px solid #000000"
+        >
+        </canvas>
+      </div>
+      <div class="form">
+        <div class="element-of-form">
+          <div>Min value:</div>
+          <input type="number" id="min_value" value="0" />
+        </div>
 
-    <canvas 
-        id="myCanvas" 
-        width="500px" 
-        height="500px" 
-        style="border:1px solid #000000"
-    >
-    </canvas>
-    <button id='btn-add' class="add-button">
-        ADD
-    </button>
+        <div class="element-of-form">
+          <div>Max value:</div>
+          <input type="number" id="max_value" value="1000" />
+        </div>
 
-    <script type="text/javascript" src="logic.js"> </script>
+        <div class="element-of-form">
+          <div>Value:</div>
+          <input type="number" id="value" value="657" />
+        </div>
+
+        <button id="btn_add" class="add-button">ADD</button>
+      </div>
+    </div>
+    <script type="text/javascript" src="logic.js"></script>
   </body>
 </html>
