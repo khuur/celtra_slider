@@ -79,7 +79,7 @@ function drawThemAll() {
         drawSlider(
             slider.x,
             slider.y,
-            (slider.id + 1) * 40,
+            (slider.id + 1) * 20,
             (slider.amount / slider.max),
             colors[slider.id]);
     })
