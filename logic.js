@@ -272,12 +272,12 @@ document.getElementById("btn_add").addEventListener("click", function () {
     if (sliders.length > 9) {
         return "";
     }
-    let minValue = document.getElementById("min_value").value;
-    let maxValue = document.getElementById("max_value").value;
-    let amount = document.getElementById("value").value;
+    let minValue = Number(document.getElementById("min_value").value);
+    let maxValue = Number(document.getElementById("max_value").value);
+    let amount = Number(document.getElementById("value").value);
     let name = document.getElementById("name").value;
     let color = document.getElementById("color").value;
-    let step = document.getElementById("step").value;
+    let step = Number(document.getElementById("step").value);
 
     //color = "#" + String(Math.random() * 999999).substr(0, 6);
     color = "#FFA500";
