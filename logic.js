@@ -70,17 +70,14 @@ function drawSlider(slider) {
 
     // second part of slider (3/4)
     if (percentage > 0.25) {
-        percentage = percentage - 0.25;
 
         context.strokeStyle = color;
         context.beginPath();
-        context.arc(x, y, r, 0, (percentage / 0.75) * (1.5 * Math.PI));
+        context.arc(x, y, r, 0, ((percentage - 0.25) / 0.75) * (1.5 * Math.PI));
         context.stroke();
     }
 
     // circle at the end of the slider
-    percentage = slider.amount / slider.max;
-
     if (percentage < 0.25) {
 
         var xx = r * Math.sin(Math.PI * 2 * percentage);
@@ -95,10 +92,8 @@ function drawSlider(slider) {
         context.arc(xx, yy, 6, 0, 2 * Math.PI);
         context.stroke();
     } else {
-
-        percentage -= 0.25;
-        var xx = r * Math.cos(Math.PI * 2 * percentage);
-        var yy = r * Math.sin(Math.PI * 2 * percentage);
+        var xx = r * Math.cos(Math.PI * 2 * (percentage - 0.25));
+        var yy = r * Math.sin(Math.PI * 2 * (percentage - 0.25));
 
         context.lineWidth = 12;
         context.strokeStyle = "#000000";
@@ -125,7 +120,7 @@ function valuesOfSliders(canvas) {
         let text = "";
         text += "$"
         text += String(Math.round(Number(slider.amount))) + " ";
-        text += slider.name
+        text += slider.name;
 
         context.fillText(text, 600, 100 + (i * 30));
         i++;
@@ -177,7 +172,6 @@ function getAngleFromMousePosition(canvas, evt) {
         case 4:
             return 90 + angle;
     }
-
 }
 
 canvas.addEventListener('mousemove', function (evt) {
@@ -186,14 +180,13 @@ canvas.addEventListener('mousemove', function (evt) {
     drawAllSliders();
     valuesOfSliders(canvas);
 
-
     sliders.forEach(slider => {
         if (slider.selected === true) {
             let angle = getAngleFromMousePosition(canvas, evt);
             slider.amount = (angle / 360) * slider.max;
 
-            slider.amount = slider.amount - Math.round(Number(slider.amount)) % Number(slider.step)
-            slider.amount = Math.round(Number(slider.amount))
+            slider.amount = slider.amount - Math.round(Number(slider.amount)) % Number(slider.step);
+            slider.amount = Math.round(Number(slider.amount));
         }
     })
 }, false);
@@ -213,14 +206,12 @@ canvas.addEventListener('mousedown', function (evt) {
             break;
         }
     }
-
 }, false);
 
 canvas.addEventListener('mouseup', function (evt) {
     sliders.forEach(slider => {
         slider.selected = false;
     })
-
 }, false);
 
 function abs(x) {
