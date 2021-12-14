@@ -1,6 +1,6 @@
 class Slider {
 
-    constructor(id, x, y, name, min, max, amount) {
+    constructor(id, x, y, name, min, max, amount, color) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -8,26 +8,37 @@ class Slider {
         this.min = min;
         this.max = max;
         this.amount = amount;
+        this.color = color;
+
+        this.selected = false;
+
     }
 }
 
-let colors = ['red', 'orange', 'blue', 'green', 'cyan', 'salmon'];
-
-let sliders = [];
+var sliders = [];
 
 // To je okno v katerega risem
 var canvas = document.getElementById('myCanvas');
 
-// Izpisuje pozicijo miske na canvas
-function writeMessage(canvas, message) {
+function writeAngle(canvas, message) {
     var context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
     context.font = '18pt Calibri';
     context.fillStyle = 'black';
-    context.fillText(message, 10, 25);
+    context.fillText(message, 510, 125);
 }
 
-// Vrne pozicijo miske
+function clearCanvas(canvas) {
+    var context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function writeMessage(canvas, message) {
+    var context = canvas.getContext('2d');
+    context.font = '18pt Calibri';
+    context.fillStyle = 'black';
+    context.fillText(message, 510, 325);
+}
+
 function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
     return {
@@ -41,16 +52,17 @@ function drawSlider(x, y, r, percentage, color) {
 
     ctx.lineWidth = 1;
 
+    // outer line of slider
     ctx.beginPath();
     ctx.strokeStyle = '#000000';
     ctx.arc(x, y, r + 7, 0, 2 * Math.PI);
     ctx.stroke();
 
+    // inner line of slider
     ctx.beginPath();
     ctx.strokeStyle = '#000000';
     ctx.arc(x, y, r - 7, 0, 2 * Math.PI);
     ctx.stroke();
-
 
     ctx.lineWidth = 15;
 
@@ -58,8 +70,10 @@ function drawSlider(x, y, r, percentage, color) {
     ctx.beginPath();
     // first part of slider (1/4)
     if (percentage < 0.25) {
+        // draw only part of circle
         ctx.arc(x, y, r, 1.5 * Math.PI, +(percentage / 0.25 * (0.5) * Math.PI) + (1.5 * Math.PI));
     } else {
+        // draw full 1/4 of circle
         ctx.arc(x, y, r, 1.5 * Math.PI, (2 * Math.PI));
     }
     ctx.stroke();
@@ -81,19 +95,77 @@ function drawThemAll() {
             slider.y,
             (slider.id + 1) * 20,
             (slider.amount / slider.max),
-            colors[slider.id]);
+            slider.color);
     })
 }
 
-// Vsakic ko premaknem misko se tole aktivira
-canvas.addEventListener('mousemove', function (evt) {
-    var mousePos = getMousePos(canvas, evt);
-    let amount = mousePos.y / 500;
-    var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y + " | " + amount;
-    writeMessage(canvas, message);
+function valuesOfSliders(canvas) {
 
+    var context = canvas.getContext('2d');
+    context.font = '18pt Calibri';
+    let i = 0;
+    sliders.forEach(slider => {
+
+        context.fillStyle = 'black';
+        let text = "";
+        text += "$"
+        text += String(Math.round(Number(slider.amount))) + " ";
+        text += slider.name
+
+        context.fillText(text, 500, 300 + (i * 30));
+        i++;
+    });
+}
+
+function getAngleFromMousePosition(canvas, evt) {
+    let mousePos = getMousePos(canvas, evt);
+    let x = mousePos.x;
+    let y = mousePos.y;
+
+    let xx = abs(x - 250);
+    let yy = abs(y - 250);
+
+    let r = Math.sqrt(xx * xx + yy * yy);
+
+    let quadrant = 0;
+
+    if (x >= 250 && y <= 250) {
+        quadrant = 1;
+    } else if (x <= 250 && y <= 250) {
+        quadrant = 2;
+    } else if (x <= 250 && y >= 250) {
+        quadrant = 3;
+    } else if (x >= 250 && y >= 250) {
+        quadrant = 4;
+    } else {
+        console.log("i cannot find this quadrant");
+    }
+
+    let angle = Math.asin(yy / r) * 180 / Math.PI;
+
+    switch (quadrant) {
+        case 0:
+            return 0;
+        case 1:
+            return 90 - angle;
+        case 2:
+            return 270 + angle;
+        case 3:
+            return 180 + (90 - angle);
+        case 4:
+            return 90 + angle;
+    }
+
+}
+
+canvas.addEventListener('mousemove', function (evt) {
+
+    clearCanvas(canvas);
+    valuesOfSliders(canvas);
     drawThemAll();
 
+    angle = getAngleFromMousePosition(canvas, evt);
+    writeAngle(canvas, angle);
 
 }, false);
 
@@ -101,90 +173,25 @@ function abs(x) {
     return x < 0 ? -x : x;
 }
 
-// Vsakic ko premaknem misko se tole aktivira
 canvas.addEventListener('click', function (evt) {
     var mousePos = getMousePos(canvas, evt);
     let x = mousePos.x;
     let y = mousePos.y;
 
-
     let xx = abs(mousePos.x - 250);
     let yy = abs(mousePos.y - 250);
 
-
-
     let r = Math.sqrt(xx * xx + yy * yy);
 
-
-    // r je pravilno izračunan
-
     for (let i = 1; i < sliders.length + 1; i++) {
-        if (abs((i * 40) - r) < 6) {
-            console.log("-----------------------------------------------");
-            console.log("xx: " + xx);
-            console.log("yy: " + yy);
-            console.log(r);
-            console.log("zadel si " + i + " trail");
-
-            console.log(sliders[0])
-
-            let kvadrant = 0;
-            let kot = 0;
-
-            if (x > 250 && y < 250) {
-                kvadrant = 1;
-            } else if (x < 250 && y < 250) {
-                kvadrant = 2;
-            } else if (x < 250 && y > 250) {
-                kvadrant = 3;
-            } else if (x > 250 && y > 250) {
-                kvadrant = 4;
-            } else {
-                console.log("i cannot find this quadrant");
-            }
-
-            kot = Math.asin(yy / r);
-
-            kot = kot * 180 / Math.PI;
-            switch (kvadrant) {
-                case 0:
-                    break;
-                case 1:
-                    console.log("si v 1 kvadrantu ");
-                    console.log("kot je : " + (90 - kot));
-                    sliders[i - 1].amount = (0.25 * ((90 - kot) / 90) * sliders[i - 1].max);
-                    break;
-
-                case 2:
-                    console.log("si v 2 kvadrantu ");
-                    console.log("kot je : " + kot);
-
-                    sliders[i - 1].amount = (0.75 * sliders[i - 1].max) + (0.25 * (kot / 90) * sliders[i - 1].max);
-
-
-                    break;
-
-                case 3:
-                    console.log("si v 3 kvadrantu");
-                    console.log("kot je : " + kot);
-
-                    sliders[i - 1].amount = (0.5 * sliders[i - 1].max) + (0.25 * ((90 - kot) / 90) * sliders[i - 1].max);
-                    break;
-
-                case 4:
-                    console.log("si v 4 kvadrantu");
-                    console.log("kot je : " + kot);
-
-                    sliders[i - 1].amount = (0.25 * sliders[i - 1].max) + (0.25 * (kot / 90) * sliders[i - 1].max);
-                    break;
-
-            }
-
+        if (abs((i * 20) - r) < 6) {
+            let angle = getAngleFromMousePosition(canvas, evt);
+            sliders[i - 1].amount = (angle / 360) * sliders[i - 1].max;
         }
     }
 
+    valuesOfSliders(canvas);
     drawThemAll();
-
 
 }, false);
 
@@ -193,9 +200,13 @@ document.getElementById("btn_add").addEventListener("click", function () {
     let minValue = document.getElementById("min_value").value;
     let maxValue = document.getElementById("max_value").value;
     let amount = document.getElementById("value").value;
+    let name = document.getElementById("name").value;
+    let color = document.getElementById("color").value;
+
+    color = "#" + String(Math.random() * 999999).substr(0, 6);
 
     sliders.push(
-        new Slider(sliders.length, 250, 250, 'name', minValue, maxValue, amount));
+        new Slider(sliders.length, 250, 250, name, minValue, maxValue, amount, color));
 
     drawThemAll();
 });

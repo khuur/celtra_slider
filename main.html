@@ -12,13 +12,17 @@
       <div>
         <canvas
           id="myCanvas"
-          width="500px"
+          width="800px"
           height="500px"
           style="border: 1px solid #000000"
         >
         </canvas>
       </div>
       <div class="form">
+        <div class="element-of-form">
+          <div>Name of slider:</div>
+          <input type="text" id="name" value="name" />
+        </div>
         <div class="element-of-form">
           <div>Min value:</div>
           <input type="number" id="min_value" value="0" />
@@ -37,6 +41,11 @@
         <div class="element-of-form">
           <div>Step:</div>
           <input type="number" id="step" value="1" />
+        </div>
+
+        <div class="element-of-form">
+          <div>Color:</div>
+          <input type="color" id="color" value="#123123" />
         </div>
 
         <button id="btn_add" class="add-button">ADD</button>
