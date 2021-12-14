@@ -86,16 +86,22 @@ function drawSlider(slider) {
         ctx.stroke();
     }
 
+    // krogec na koncu sliderja
+
+    percentage = slider.amount / slider.max;
+    console.log(slider);
+    console.log(percentage);
+
     if (percentage < 0.25) {
-        
-        var xxx = r * Math.cos(Math.PI * 2 * percentage);
-        var yyy = r * Math.sin(Math.PI * 2 * percentage);
+
+        var xxx = r * Math.sin(Math.PI * 2 * percentage);
+        var yyy = r * Math.cos(Math.PI * 2 * percentage);
 
         console.log(xxx);
         console.log(yyy);
 
-        xxx += 250;
-        yyy += 250;
+        xxx = 250 + xxx;
+        yyy = 250 - yyy;
 
         ctx.lineWidth = 12;
         ctx.strokeStyle = "#000000";
@@ -104,6 +110,7 @@ function drawSlider(slider) {
         ctx.stroke();
     } else {
 
+        percentage -= 0.25;
         var xxx = r * Math.cos(Math.PI * 2 * percentage);
         var yyy = r * Math.sin(Math.PI * 2 * percentage);
 
@@ -276,11 +283,15 @@ document.getElementById("btn_add").addEventListener("click", function () {
     let maxValue = Number(document.getElementById("max_value").value);
     let amount = Number(document.getElementById("value").value);
     let name = document.getElementById("name").value;
-    let color = document.getElementById("color").value;
+    //let color = document.getElementById("color").value;
     let step = Number(document.getElementById("step").value);
 
     //color = "#" + String(Math.random() * 999999).substr(0, 6);
-    color = "#FFA500";
+    //color = "#FFA500"; // orange
+
+    let colors = ["#C364C5", "#FF1DCE", "#E3256B", "#FC6C85", "#FFA089", "#FFA343", "#B2EC5D", "#1DF914" ];
+
+    let color = colors[sliders.length];
 
     sliders.push(
         new Slider(sliders.length, 250, 250, name, minValue, maxValue, amount, color, step));
