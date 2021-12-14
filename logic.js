@@ -245,10 +245,10 @@ canvas.addEventListener('mousedown', function (evt) {
 
 document.getElementById("btn_add").addEventListener("click", function () {
 
-    if (sliders.length > 9) {
+    if (sliders.length > 6) {
         return "";
     }
-    let minValue = Number(document.getElementById("min_value").value);
+    //let minValue = Number(document.getElementById("min_value").value);
     let maxValue = Number(document.getElementById("max_value").value);
     let amount = Number(document.getElementById("value").value);
     let name = document.getElementById("name").value;
@@ -263,7 +263,7 @@ document.getElementById("btn_add").addEventListener("click", function () {
     let color = colors[sliders.length];
 
     sliders.push(
-        new Slider(sliders.length, 250, 250, name, minValue, maxValue, amount, color, step));
+        new Slider(sliders.length, 250, 250, name, 0, maxValue, amount, color, step));
 
     clearCanvas(canvas);
     drawAllSliders();
