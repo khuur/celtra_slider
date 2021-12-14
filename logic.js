@@ -1,6 +1,6 @@
 class Slider {
 
-    constructor(id, x, y, name, min, max, amount, color) {
+    constructor(id, x, y, name, min, max, amount, color, step) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -9,6 +9,7 @@ class Slider {
         this.max = max;
         this.amount = amount;
         this.color = color;
+        this.step = step;
 
         this.selected = false;
 
@@ -112,7 +113,7 @@ function valuesOfSliders(canvas) {
         text += String(Math.round(Number(slider.amount))) + " ";
         text += slider.name
 
-        context.fillText(text, 500, 300 + (i * 30));
+        context.fillText(text, 500, 100 + (i * 30));
         i++;
     });
 }
@@ -168,6 +169,9 @@ canvas.addEventListener('mousemove', function (evt) {
     sliders.forEach(slider => {
         if (slider.selected === true) {
             slider.amount = (angle / 360) * slider.max;
+
+            slider.amount = slider.amount - Math.round(Number(slider.amount)) % Number(slider.step)
+            slider.amount = Math.round(Number(slider.amount))
         }
     })
     //writeAngle(canvas, angle);
@@ -214,6 +218,11 @@ canvas.addEventListener('click', function (evt) {
         if (abs(((i + 1) * 20) - r) < 6) {
             let angle = getAngleFromMousePosition(canvas, evt);
             sliders[i].amount = (angle / 360) * sliders[i].max;
+
+            let slider = sliders[i];
+            slider.amount = slider.amount - Math.round(Number(slider.amount)) % Number(slider.step)
+            slider.amount = Math.round(Number(slider.amount))
+
             break;
         }
     }
@@ -230,11 +239,12 @@ document.getElementById("btn_add").addEventListener("click", function () {
     let amount = document.getElementById("value").value;
     let name = document.getElementById("name").value;
     let color = document.getElementById("color").value;
+    let step = document.getElementById("step").value;
 
     color = "#" + String(Math.random() * 999999).substr(0, 6);
 
     sliders.push(
-        new Slider(sliders.length, 250, 250, name, minValue, maxValue, amount, color));
+        new Slider(sliders.length, 250, 250, name, minValue, maxValue, amount, color, step));
 
     drawThemAll();
 });
