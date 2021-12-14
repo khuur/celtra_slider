@@ -166,49 +166,35 @@ canvas.addEventListener('mousemove', function (evt) {
 
     angle = getAngleFromMousePosition(canvas, evt);
     sliders.forEach(slider => {
-        if(slider.selected === true) {
+        if (slider.selected === true) {
             slider.amount = (angle / 360) * slider.max;
         }
     })
-    writeAngle(canvas, angle);
+    //writeAngle(canvas, angle);
 
 }, false);
 
 canvas.addEventListener('mousedown', function (evt) {
 
     var mousePos = getMousePos(canvas, evt);
-    let x = mousePos.x;
-    let y = mousePos.y;
 
-    let xx = abs(x - 250);
-    let yy = abs(y - 250);
+    let xx = abs(mousePos.x - 250);
+    let yy = abs(mousePos.y - 250);
 
     let r = Math.sqrt(xx * xx + yy * yy);
 
-    for (let i = 1; i < sliders.length + 1; i++) {
-        if (abs((i * 20) - r) < 6) {
-            sliders[i - 1].selected = true;
+    for (let i = 0; i < sliders.length; i++) {
+        if (abs(((i + 1) * 20) - r) < 6) {
+            sliders[i].selected = true;
         }
     }
 
 }, false);
 
 canvas.addEventListener('mouseup', function (evt) {
-
-    var mousePos = getMousePos(canvas, evt);
-    let x = mousePos.x;
-    let y = mousePos.y;
-
-    let xx = abs(x - 250);
-    let yy = abs(y - 250);
-
-    let r = Math.sqrt(xx * xx + yy * yy);
-
-    for (let i = 1; i < sliders.length + 1; i++) {
-        if (abs((i * 20) - r) < 6) {
-            sliders[i - 1].selected = false;
-        }
-    }
+    sliders.forEach(slider => {
+        slider.selected = false;
+    })
 
 }, false);
 
@@ -218,21 +204,20 @@ function abs(x) {
 
 canvas.addEventListener('click', function (evt) {
     var mousePos = getMousePos(canvas, evt);
-    let x = mousePos.x;
-    let y = mousePos.y;
 
     let xx = abs(mousePos.x - 250);
     let yy = abs(mousePos.y - 250);
 
     let r = Math.sqrt(xx * xx + yy * yy);
 
-    for (let i = 1; i < sliders.length + 1; i++) {
-        if (abs((i * 20) - r) < 6) {
+    for (let i = 0; i < sliders.length; i++) {
+        if (abs(((i + 1) * 20) - r) < 6) {
             let angle = getAngleFromMousePosition(canvas, evt);
-            sliders[i - 1].amount = (angle / 360) * sliders[i - 1].max;
+            sliders[i].amount = (angle / 360) * sliders[i].max;
+            break;
         }
     }
-
+    clearCanvas(canvas);
     valuesOfSliders(canvas);
     drawThemAll();
 
