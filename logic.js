@@ -165,7 +165,50 @@ canvas.addEventListener('mousemove', function (evt) {
     drawThemAll();
 
     angle = getAngleFromMousePosition(canvas, evt);
+    sliders.forEach(slider => {
+        if(slider.selected === true) {
+            slider.amount = (angle / 360) * slider.max;
+        }
+    })
     writeAngle(canvas, angle);
+
+}, false);
+
+canvas.addEventListener('mousedown', function (evt) {
+
+    var mousePos = getMousePos(canvas, evt);
+    let x = mousePos.x;
+    let y = mousePos.y;
+
+    let xx = abs(x - 250);
+    let yy = abs(y - 250);
+
+    let r = Math.sqrt(xx * xx + yy * yy);
+
+    for (let i = 1; i < sliders.length + 1; i++) {
+        if (abs((i * 20) - r) < 6) {
+            sliders[i - 1].selected = true;
+        }
+    }
+
+}, false);
+
+canvas.addEventListener('mouseup', function (evt) {
+
+    var mousePos = getMousePos(canvas, evt);
+    let x = mousePos.x;
+    let y = mousePos.y;
+
+    let xx = abs(x - 250);
+    let yy = abs(y - 250);
+
+    let r = Math.sqrt(xx * xx + yy * yy);
+
+    for (let i = 1; i < sliders.length + 1; i++) {
+        if (abs((i * 20) - r) < 6) {
+            sliders[i - 1].selected = false;
+        }
+    }
 
 }, false);
 
