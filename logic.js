@@ -18,13 +18,6 @@ var sliders = [];
 // To je okno v katerega risem
 var canvas = document.getElementById('myCanvas');
 
-function writeAngle(canvas, message) {
-    var context = canvas.getContext('2d');
-    context.font = '18pt Calibri';
-    context.fillStyle = 'black';
-    context.fillText(message, 510, 55);
-}
-
 function clearCanvas(canvas) {
     var context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
@@ -39,93 +32,79 @@ function getMousePos(canvas, evt) {
 }
 
 function drawSlider(slider) {
-    var ctx = canvas.getContext("2d");
+    var context = canvas.getContext("2d");
 
-    ctx.lineWidth = 1;
+    context.lineWidth = 1;
 
     let x = slider.x;
     let y = slider.y;
     let r = (slider.id + 1) * 30;
     let percentage = slider.amount / slider.max;
     let color = slider.color;
-    let amount = slider.amount;
-
 
     // outer line of slider
-    ctx.beginPath();
-    ctx.strokeStyle = '#000000';
-    ctx.arc(x, y, r + 9, 0, 2 * Math.PI);
-    ctx.stroke();
+    context.beginPath();
+    context.strokeStyle = '#000000';
+    context.arc(x, y, r + 9, 0, 2 * Math.PI);
+    context.stroke();
 
     // inner line of slider
-    ctx.beginPath();
-    ctx.strokeStyle = '#000000';
-    ctx.arc(x, y, r - 9, 0, 2 * Math.PI);
-    ctx.stroke();
+    context.beginPath();
+    context.strokeStyle = '#000000';
+    context.arc(x, y, r - 9, 0, 2 * Math.PI);
+    context.stroke();
 
-    ctx.lineWidth = 19;
+    context.lineWidth = 19;
 
-    ctx.strokeStyle = color;
-    ctx.beginPath();
-    // first part of slider (1/4)
+    context.strokeStyle = color;
+    context.beginPath();
+    
     if (percentage < 0.25) {
-        // draw only part of circle
-        ctx.arc(x, y, r, 1.5 * Math.PI, +(percentage / 0.25 * (0.5) * Math.PI) + (1.5 * Math.PI));
+        // draw only part of circle (less than 1/4)
+        context.arc(x, y, r, 1.5 * Math.PI, +(percentage / 0.25 * (0.5) * Math.PI) + (1.5 * Math.PI));
     } else {
-        // draw full 1/4 of circle
-        ctx.arc(x, y, r, 1.5 * Math.PI, (2 * Math.PI));
+        // draw 1/4 of circle
+        context.arc(x, y, r, 1.5 * Math.PI, (2 * Math.PI));
     }
-    ctx.stroke();
+    context.stroke();
+
     // second part of slider (3/4)
     if (percentage > 0.25) {
         percentage = percentage - 0.25;
 
-        ctx.strokeStyle = color;
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, (percentage / 0.75) * (1.5 * Math.PI));
-        ctx.stroke();
+        context.strokeStyle = color;
+        context.beginPath();
+        context.arc(x, y, r, 0, (percentage / 0.75) * (1.5 * Math.PI));
+        context.stroke();
     }
 
-    // krogec na koncu sliderja
-
+    // circle at the end of the slider
     percentage = slider.amount / slider.max;
-    console.log(slider);
-    console.log(percentage);
 
     if (percentage < 0.25) {
 
-        var xxx = r * Math.sin(Math.PI * 2 * percentage);
-        var yyy = r * Math.cos(Math.PI * 2 * percentage);
+        var xx = r * Math.sin(Math.PI * 2 * percentage);
+        var yy = r * Math.cos(Math.PI * 2 * percentage);
 
-        console.log(xxx);
-        console.log(yyy);
+        xx = 250 + xx;
+        yy = 250 - yy;
 
-        xxx = 250 + xxx;
-        yyy = 250 - yyy;
-
-        ctx.lineWidth = 12;
-        ctx.strokeStyle = "#000000";
-        ctx.beginPath();
-        ctx.arc(xxx, yyy, 6, 0, 2 * Math.PI);
-        ctx.stroke();
+        context.lineWidth = 12;
+        context.strokeStyle = "#000000";
+        context.beginPath();
+        context.arc(xx, yy, 6, 0, 2 * Math.PI);
+        context.stroke();
     } else {
 
         percentage -= 0.25;
-        var xxx = r * Math.cos(Math.PI * 2 * percentage);
-        var yyy = r * Math.sin(Math.PI * 2 * percentage);
+        var xx = r * Math.cos(Math.PI * 2 * percentage);
+        var yy = r * Math.sin(Math.PI * 2 * percentage);
 
-        console.log(xxx);
-        console.log(yyy);
-
-        xxx += 250;
-        yyy += 250;
-
-        ctx.lineWidth = 12;
-        ctx.strokeStyle = "#000000";
-        ctx.beginPath();
-        ctx.arc(xxx, yyy, 6, 0, 2 * Math.PI);
-        ctx.stroke();
-
+        context.lineWidth = 12;
+        context.strokeStyle = "#000000";
+        context.beginPath();
+        context.arc(250 + xx, 250 + yy, 6, 0, 2 * Math.PI);
+        context.stroke();
     }
 
 
