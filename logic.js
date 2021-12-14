@@ -58,7 +58,7 @@ function drawSlider(slider) {
 
     context.strokeStyle = color;
     context.beginPath();
-    
+
     if (percentage < 0.25) {
         // draw only part of circle (less than 1/4)
         context.arc(x, y, r, 1.5 * Math.PI, +(percentage / 0.25 * (0.5) * Math.PI) + (1.5 * Math.PI));
@@ -106,12 +106,9 @@ function drawSlider(slider) {
         context.arc(250 + xx, 250 + yy, 6, 0, 2 * Math.PI);
         context.stroke();
     }
-
-
-
 }
 
-function drawThemAll() {
+function drawAllSliders() {
     sliders.forEach(slider => {
         drawSlider(slider);
     })
@@ -133,6 +130,7 @@ function valuesOfSliders(canvas) {
         context.fillText(text, 600, 100 + (i * 30));
         i++;
 
+        // rectangle before text
         context.lineWidth = 4;
         context.beginPath();
         context.strokeStyle = slider.color;
@@ -185,12 +183,13 @@ function getAngleFromMousePosition(canvas, evt) {
 canvas.addEventListener('mousemove', function (evt) {
 
     clearCanvas(canvas);
+    drawAllSliders();
     valuesOfSliders(canvas);
-    drawThemAll();
 
-    angle = getAngleFromMousePosition(canvas, evt);
+
     sliders.forEach(slider => {
         if (slider.selected === true) {
+            let angle = getAngleFromMousePosition(canvas, evt);
             slider.amount = (angle / 360) * slider.max;
 
             slider.amount = slider.amount - Math.round(Number(slider.amount)) % Number(slider.step)
@@ -209,8 +208,9 @@ canvas.addEventListener('mousedown', function (evt) {
     let r = Math.sqrt(xx * xx + yy * yy);
 
     for (let i = 0; i < sliders.length; i++) {
-        if (abs(((i + 1) * 30) - r) < 6) {
+        if (abs(((i + 1) * 30) - r) < 8) {
             sliders[i].selected = true;
+            break;
         }
     }
 
@@ -236,20 +236,19 @@ canvas.addEventListener('mousedown', function (evt) {
     let r = Math.sqrt(xx * xx + yy * yy);
 
     for (let i = 0; i < sliders.length; i++) {
-        if (abs(((i + 1) * 30) - r) < 6) {
+        if (abs(((i + 1) * 30) - r) < 8) {
             let angle = getAngleFromMousePosition(canvas, evt);
             sliders[i].amount = (angle / 360) * sliders[i].max;
 
-            let slider = sliders[i];
-            slider.amount = slider.amount - Math.round(Number(slider.amount)) % Number(slider.step)
-            slider.amount = Math.round(Number(slider.amount))
+            sliders[i].amount = sliders[i].amount - Math.round(Number(sliders[i].amount)) % Number(sliders[i].step)
+            sliders[i].amount = Math.round(Number(sliders[i].amount))
 
             break;
         }
     }
     clearCanvas(canvas);
+    drawAllSliders();
     valuesOfSliders(canvas);
-    drawThemAll();
 
 }, false);
 
@@ -268,7 +267,7 @@ document.getElementById("btn_add").addEventListener("click", function () {
     //color = "#" + String(Math.random() * 999999).substr(0, 6);
     //color = "#FFA500"; // orange
 
-    let colors = ["#C364C5", "#FF1DCE", "#E3256B", "#FC6C85", "#FFA089", "#FFA343", "#B2EC5D", "#1DF914" ];
+    let colors = ["#C364C5", "#FF1DCE", "#E3256B", "#FC6C85", "#FFA089", "#FFA343", "#B2EC5D", "#1DF914"];
 
     let color = colors[sliders.length];
 
@@ -276,6 +275,6 @@ document.getElementById("btn_add").addEventListener("click", function () {
         new Slider(sliders.length, 250, 250, name, minValue, maxValue, amount, color, step));
 
     clearCanvas(canvas);
-    drawThemAll();
+    drawAllSliders();
     valuesOfSliders(canvas);
 });
