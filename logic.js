@@ -206,7 +206,7 @@ function abs(x) {
     return x < 0 ? -x : x;
 }
 
-canvas.addEventListener('click', function (evt) {
+canvas.addEventListener('mousedown', function (evt) {
     var mousePos = getMousePos(canvas, evt);
 
     let xx = abs(mousePos.x - 250);
