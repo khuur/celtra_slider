@@ -1,5 +1,4 @@
 class Slider {
-
     constructor(id, x, y, name, min, max, amount, color, step) {
         this.id = id;
         this.x = x;
@@ -10,9 +9,7 @@ class Slider {
         this.amount = amount;
         this.color = color;
         this.step = step;
-
         this.selected = false;
-
     }
 }
 
@@ -25,19 +22,12 @@ function writeAngle(canvas, message) {
     var context = canvas.getContext('2d');
     context.font = '18pt Calibri';
     context.fillStyle = 'black';
-    context.fillText(message, 510, 125);
+    context.fillText(message, 510, 55);
 }
 
 function clearCanvas(canvas) {
     var context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
-}
-
-function writeMessage(canvas, message) {
-    var context = canvas.getContext('2d');
-    context.font = '18pt Calibri';
-    context.fillStyle = 'black';
-    context.fillText(message, 510, 325);
 }
 
 function getMousePos(canvas, evt) {
@@ -113,8 +103,14 @@ function valuesOfSliders(canvas) {
         text += String(Math.round(Number(slider.amount))) + " ";
         text += slider.name
 
-        context.fillText(text, 500, 100 + (i * 30));
+        context.fillText(text, 600, 100 + (i * 30));
         i++;
+
+        context.lineWidth = 4;
+        context.beginPath();
+        context.strokeStyle = slider.color;
+        context.rect(580, 60 + (i * 30), 3, 6);
+        context.stroke();
     });
 }
 
@@ -174,8 +170,6 @@ canvas.addEventListener('mousemove', function (evt) {
             slider.amount = Math.round(Number(slider.amount))
         }
     })
-    //writeAngle(canvas, angle);
-
 }, false);
 
 canvas.addEventListener('mousedown', function (evt) {
@@ -241,10 +235,12 @@ document.getElementById("btn_add").addEventListener("click", function () {
     let color = document.getElementById("color").value;
     let step = document.getElementById("step").value;
 
-    color = "#" + String(Math.random() * 999999).substr(0, 6);
+    //color = "#" + String(Math.random() * 999999).substr(0, 6);
 
     sliders.push(
         new Slider(sliders.length, 250, 250, name, minValue, maxValue, amount, color, step));
 
+    clearCanvas(canvas);
     drawThemAll();
+    valuesOfSliders(canvas);
 });
